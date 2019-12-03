@@ -192,10 +192,110 @@ class DetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(todo.title),
+        actions: <Widget>[
+          // action button
+          IconButton(
+            icon: new Icon(Icons.edit),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        EditTodoForm(todo: todo)),
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Text(todo.description),
+      ),
+    );
+  }
+}
+
+class EditTodoForm extends StatefulWidget {
+
+  final Todo todo;
+
+  EditTodoForm({Key key, @required this.todo}) : super(key: key);
+
+  @override
+  EditTodoFormState createState() {
+    return EditTodoFormState(this.todo);
+  }
+}
+
+class EditTodoFormState extends State<EditTodoForm> {
+  final _formKey = GlobalKey<FormState>();
+
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+
+  final Todo _todo;
+
+  // constructor
+  EditTodoFormState(this._todo){
+    _titleController.text = _todo.title;
+    _descriptionController.text = _todo.description;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Edit Todo'),
+        actions: <Widget>[
+          // action button
+          IconButton(
+            icon: new Icon(Icons.cancel),
+            onPressed: () {
+              //Provider
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+      body: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            TextFormField(
+                controller: _titleController,
+                decoration: const InputDecoration(labelText: 'Title'),
+                validator: (String value) {
+                  if (value.trim().isEmpty) {
+                    return 'Title is required';
+                  }
+                  return null;
+                }),
+            TextFormField(
+              controller: _descriptionController,
+              decoration: const InputDecoration(labelText: 'Description'),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: RaisedButton(
+                onPressed: () {
+                  // Validate returns true if the form is valid, or falseSubmit
+                  // otherwise.
+                  if (_formKey.currentState.validate()) {
+
+                    // update the actual todo with the real values now we have validated
+                    _todo.title = _titleController.value.text;
+                    _todo.description = _descriptionController.value.text;
+
+                    //Provider
+                    Navigator.of(context).pop();
+                  }
+                },
+                child: Text('Update'),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
