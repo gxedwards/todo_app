@@ -13,11 +13,10 @@ Current functionality:
  - Delete by swipe
  - Read only view at item
  - Add of item
-
+ - Ability to edit an existing item
 
 Still to be worked on.
   - make create screen cleaner
-  - Ability to edit an existing item
   - Drag and drop of tasks
   - Making the task interface cleaner
   - Improved state management
